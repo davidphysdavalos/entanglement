@@ -20,8 +20,8 @@ using namespace RMT;
 
 TCLAP::CmdLine cmd("Programilla para calcular concurrencias", ' ', "0.1");
 //TCLAP::ValueArg<string> optionArg("o","option", "Option" ,false,"normalito", "string",cmd); // Para llamar strings
-TCLAP::ValueArg<string> state("s","state", "Tipo de estado separable o bell" ,false,"bell", "string",cmd); // Para llamar strings
-//TCLAP::ValueArg<unsigned int> seed("s","seed", "Random seed [0 for urandom]",false,
+TCLAP::ValueArg<string> state("","state", "Tipo de estado separable o bell" ,false,"bell", "string",cmd); // Para llamar strings
+TCLAP::ValueArg<unsigned int> seed("s","seed", "Random seed [0 for urandom]",false, 0,"unsigned int",cmd);
 TCLAP::ValueArg<double> qubits("q","qubits", "qubits",false, 2,"int",cmd);
 TCLAP::ValueArg<double> delta("d","delta", "delta del tiempo",false, 0.1,"double",cmd);
 TCLAP::ValueArg<double> tiempo("t","tiempo", "tiempo",false, 2.0,"double",cmd);
@@ -34,15 +34,24 @@ int main(int argc, char* argv[])
 cmd.parse( argc, argv );
 cout.precision(12);
 
+// {{{ Set seed for random
+unsigned int semilla=seed.getValue();
+if (semilla == 0){
+  Random semilla_uran; semilla=semilla_uran.strong();
+} 
+RNG_reset(semilla);
+// }}}
+
 cvec init= zeros_c(4);
-init(0)=1.0/sqrt(2);
+init(0)=1.0/sqrt(2.0);
 cmat H = RandomGUE(4);
 if(state.getValue()=="bell"){
-init(3)=1.0/sqrt(2);
+init(3)=1.0/sqrt(2.0);
 }
 if(state.getValue()=="separable"){
 init(0)=1.0;
 }
+cout<<init<<endl;
 int N = tiempo.getValue()/delta.getValue();
 
 for(int i=0;i<N+1;i++){
