@@ -91,6 +91,17 @@ init(1)=1/sqrt(3.0);
 init(2)=1/sqrt(3.0);
 init(4)=1/sqrt(3.0);
 }
+if(state.getValue()=="thetaghz"){
+	init(0)=cos(theta.getValue());
+	init(7)=sin(theta.getValue());
+}
+if(state.getValue()=="thetaw"){
+init(0)=0.0;
+init(7)=0.0;
+init(1)=sin(theta.getValue())/sqrt(3.0);
+init(2)=cos(theta.getValue());
+init(4)=sin(theta.getValue())/sqrt(3.0);
+}
 }
 //cout<<ConcurrenceFromPure(init)<<endl;
 
