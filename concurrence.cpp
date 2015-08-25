@@ -76,6 +76,9 @@ init(7)=1.0/sqrt(2.0);
 if(state.getValue()=="separable"){
 init(0)=1.0;
 }
+if(state.getValue()=="bell"){
+init(3)=1.0/sqrt(2.0);
+}
 if(state.getValue()=="wstate"){
 init(0)=0.0;
 init(7)=0.0;
