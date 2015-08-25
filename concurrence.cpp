@@ -26,6 +26,7 @@ TCLAP::ValueArg<unsigned int> seed("","seed", "Random seed [0 for urandom]",fals
 TCLAP::ValueArg<int> members("m","members", "Ensemble members",false, 1,"int",cmd);
 TCLAP::ValueArg<int> qubits("q","qubits", "number of qubits",false, 2,"int",cmd);
 TCLAP::ValueArg<double> delta("d","delta", "delta del tiempo",false, 0.1,"double",cmd);
+TCLAP::ValueArg<double> theta("","theta", "theta de bell theta",false, 0.0,"double",cmd);
 TCLAP::ValueArg<double> tiempo("t","tiempo", "tiempo",false, 2.0,"double",cmd);
 //TCLAP::ValueArg<int> steps("","steps","steps",false, 100,"int",cmd); //llamando enteros
 
@@ -64,6 +65,10 @@ init(3)=1.0/sqrt(2.0);
 }
 if(state.getValue()=="separable"){
 init(0)=1.0;
+}
+if(state.getValue()=="thetabell"){
+	init(0)=cos(theta.getValue());
+	init(3)=sin(theta.getValue());
 }
 }
 
