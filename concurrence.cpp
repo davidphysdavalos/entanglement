@@ -76,6 +76,13 @@ init(7)=1.0/sqrt(2.0);
 if(state.getValue()=="separable"){
 init(0)=1.0;
 }
+if(state.getValue()=="wstate"){
+init(0)=0.0;
+init(7)=0.0;
+init(1)=1/sqrt(3.0);
+init(2)=1/sqrt(3.0);
+init(4)=1/sqrt(3.0);
+}
 }
 //cout<<ConcurrenceFromPure(init)<<endl;
 
