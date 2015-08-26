@@ -102,6 +102,10 @@ init(1)=sin(theta.getValue())/sqrt(3.0);
 init(2)=cos(theta.getValue());
 init(4)=sin(theta.getValue())/sqrt(3.0);
 }
+if(state.getValue()=="thetabell"){
+	init(0)=cos(theta.getValue());
+	init(3)=sin(theta.getValue());
+}
 }
 //cout<<ConcurrenceFromPure(init)<<endl;
 
