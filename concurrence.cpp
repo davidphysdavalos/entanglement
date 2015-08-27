@@ -22,6 +22,7 @@ using namespace RMT;
 TCLAP::CmdLine cmd("Programilla para calcular concurrencias", ' ', "0.9");
 //TCLAP::ValueArg<string> optionArg("o","option", "Option" ,false,"normalito", "string",cmd); // Para llamar strings
 TCLAP::ValueArg<string> state("s","state", "Tipo de estado separable o bell" ,false,"separable","string",cmd); // Para llamar strings
+TCLAP::ValueArg<string> ensemble("e","ensemble", "Ensamble a usar GOE o GUE" ,false,"GUE","string",cmd); // Para llamar strings
 TCLAP::ValueArg<unsigned int> seed("","seed", "Random seed [0 for urandom]",false, 0,"unsigned int",cmd);
 TCLAP::ValueArg<int> members("m","members", "Ensemble members",false, 1,"int",cmd);
 TCLAP::ValueArg<int> qubits("q","qubits", "number of qubits",false, 2,"int",cmd);
@@ -122,7 +123,12 @@ int i;
 
 if(qubits.getValue()==2){
 for(int s=1;s<members.getValue()+1;s++){
+if(ensemble.getValue()=="GUE"){
 H = RandomGUE(4);
+}
+if(ensemble.getValue()=="GOE"){
+H = to_cmat(RandomGOE(4));
+}
 psi=init;
 for(i=0;i<N+1;i++){
 
@@ -147,7 +153,12 @@ if(qubits.getValue()==3){
 //cout<<ConcurrenceTri(init)<<endl;
 //cout<<(double)length(init)-2.0<<endl;
 for(int s=1;s<members.getValue()+1;s++){
+if(ensemble.getValue()=="GUE"){
 H = RandomGUE(8);
+}
+if(ensemble.getValue()=="GOE"){
+H = to_cmat(RandomGOE(8));
+}
 psi=init;
 for(i=0;i<N+1;i++){
 
