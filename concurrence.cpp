@@ -23,6 +23,7 @@ TCLAP::CmdLine cmd("Programilla para calcular concurrencias", ' ', "0.9");
 //TCLAP::ValueArg<string> optionArg("o","option", "Option" ,false,"normalito", "string",cmd); // Para llamar strings
 TCLAP::ValueArg<string> state("s","state", "Tipo de estado separable o bell" ,false,"separable","string",cmd); // Para llamar strings
 TCLAP::ValueArg<string> ensemble("e","ensemble", "Ensamble a usar GOE o GUE" ,false,"GUE","string",cmd); // Para llamar strings
+TCLAP::ValueArg<string> interval("i","interval", "one instant or zero from the value given with -t" ,false,"int","string",cmd); // Para llamar strings
 TCLAP::ValueArg<unsigned int> seed("","seed", "Random seed [0 for urandom]",false, 0,"unsigned int",cmd);
 TCLAP::ValueArg<int> members("m","members", "Ensemble members",false, 1,"int",cmd);
 TCLAP::ValueArg<int> qubits("q","qubits", "number of qubits",false, 2,"int",cmd);
@@ -56,6 +57,7 @@ RNG_reset(semilla);
 // }}}
 
 
+//{{{
 cvec init;
 // state selection
 if(qubits.getValue()==2){
@@ -108,17 +110,15 @@ if(state.getValue()=="thetabell"){
 	init(3)=sin(theta.getValue());
 }
 }
-//cout<<ConcurrenceFromPure(init)<<endl;
-
-//iterations for achieve time
 int N = tiempo.getValue()/delta.getValue();
 
 
 //ensemble loop
 cvec psi;
+cmat H;
+if(interval.getValue()=="int"){
 //Concurrence list
 vec list=zeros(N);
-cmat H;
 int i;
 
 if(qubits.getValue()==2){
@@ -129,12 +129,11 @@ H = RandomGUE(4);
 if(ensemble.getValue()=="GOE"){
 H = to_cmat(RandomGOE(4));
 }
-psi=init;
 for(i=0;i<N+1;i++){
 
 cmat U = exponentiate_nonsym(-complex <double>(0,1)*(double)i*delta.getValue()*H);
 
-psi = U*psi;
+psi = U*init;
 //cout<<psi<<endl;
 list(i)=list(i)*((double)s-1)/((double)s)+ConcurrenceFromPure(psi)/((double)s);
 
@@ -159,12 +158,11 @@ H = RandomGUE(8);
 if(ensemble.getValue()=="GOE"){
 H = to_cmat(RandomGOE(8));
 }
-psi=init;
 for(i=0;i<N+1;i++){
 
 cmat U = exponentiate_nonsym(-complex <double>(0,1)*(double)i*delta.getValue()*H);
 
-psi = U*psi;
+psi = U*init;
 //cout<<psi<<endl;
 list(i)=list(i)*((double)s-1)/((double)s)+ConcurrenceTri(psi)/((double)s);
 
@@ -179,6 +177,60 @@ list(i)=list(i)*((double)s-1)/((double)s)+ConcurrenceTri(psi)/((double)s);
 
 for(int i=0;i<N+1;i++){
 	cout<<i*delta.getValue()<<" "<<list(i)<<endl;
+}
+
+}
+
+if(interval.getValue()=="onetime"){
+	
+double concurrenciaonetime=0.0;
+	
+if(qubits.getValue()==3){
+for(int s=1;s<members.getValue()+1;s++){
+if(ensemble.getValue()=="GUE"){
+H = RandomGUE(8);
+}
+if(ensemble.getValue()=="GOE"){
+H = to_cmat(RandomGOE(8));
+}
+
+cmat U = exponentiate_nonsym(-complex <double>(0,1)*(double)tiempo.getValue()*H);
+
+psi = U*init;
+//cout<<psi<<endl;
+concurrenciaonetime=concurrenciaonetime*((double)s-1)/((double)s)+ConcurrenceTri(psi)/((double)s);
+
+//cout<<i*delta.getValue()<<" "<<Concurrence(init)<<endl;
+
+
+}
+
+}
+
+if(qubits.getValue()==2){
+for(int s=1;s<members.getValue()+1;s++){
+if(ensemble.getValue()=="GUE"){
+H = RandomGUE(4);
+}
+if(ensemble.getValue()=="GOE"){
+H = to_cmat(RandomGOE(4));
+}
+
+cmat U = exponentiate_nonsym(-complex <double>(0,1)*(double)tiempo.getValue()*H);
+
+psi = U*init;
+//cout<<psi<<endl;
+concurrenciaonetime=concurrenciaonetime*((double)s-1)/((double)s)+ConcurrenceFromPure(psi)/((double)s);
+
+//cout<<i*delta.getValue()<<" "<<Concurrence(init)<<endl;
+
+
+}
+
+}
+
+cout<<concurrenciaonetime<<endl;
+
 }
 
 //cmat H = RandomGUE(4);
